@@ -1,5 +1,5 @@
-from dataclasses import dataclass
-from datetime import datetime
+from dataclasses import dataclass, field
+from datetime import datetime, UTC
 from typing import TYPE_CHECKING
 
 # if TYPE_CHECKING:
