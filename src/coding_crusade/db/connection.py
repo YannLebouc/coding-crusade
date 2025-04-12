@@ -1,5 +1,6 @@
 import psycopg
-from config import settings
+from coding_crusade.config import settings
 
-database_url = settings.DATABASE_URL
-database_connection = psycopg.connect(database_url)
+
+def get_connection():
+    return psycopg.connect(settings.DATABASE_URL)

@@ -1,3 +1,4 @@
-CREATE TABLE users(
+-- CREATE TABLE users(
     
-)
+-- )
+SELECT 1;
