@@ -1,5 +1,6 @@
 from coding_crusade.db.connection import get_connection
 from coding_crusade.models.user import User
+from coding_crusade.dtos.user import UserResponse
 from psycopg import DatabaseError, class_row
 import logging
 
@@ -9,9 +10,9 @@ logger = logging.getLogger(__name__)
 class UserRepository:
 
     @staticmethod
-    def create_user(user: User) -> User:
+    def create_user(user: User) -> UserResponse:
         try:
-            with get_connection(row_factory=class_row(User)) as conn:
+            with get_connection(row_factory=class_row(UserResponse)) as conn:
                 result = conn.execute(
                     """
                         INSERT INTO users(username, password, email)
@@ -19,7 +20,6 @@ class UserRepository:
                         RETURNING
                             id
                             ,username
-                            ,password
                             ,email
                             ,is_admin
                             ,is_active
