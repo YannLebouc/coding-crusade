@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 from datetime import datetime, UTC
-from typing import TYPE_CHECKING
+from werkzeug import generate_password_hash, check_password_hash
+
+# from typing import TYPE_CHECKING
 
 # if TYPE_CHECKING:
 #     from models.projects import Project
@@ -17,3 +19,9 @@ class User:
     created_at: datetime = field(default=datetime.now(UTC))
     updated_at: datetime = field(default=datetime.now(UTC))
     # projects: list(Project) = []
+
+    def set_password(self, password: str) -> str:
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password: str) -> bool:
+        return check_password_hash(self.password, password)
