@@ -28,7 +28,7 @@ class UserRepository:
         return result
 
         @staticmethod
-        def get_user_by_id(user: User) -> UserResponse | None:
+        def get_user_by_id(id: int) -> UserResponse | None:
             with get_connection(row_factory=class_row(UserResponse)) as conn:
                 result = conn.execute(
                     """
@@ -44,12 +44,12 @@ class UserRepository:
                         WHERE id = %s
                         ;
                     """,
-                    (user.id),
+                    (id),
                 ).fetchone()
             return result
 
             @staticmethod
-            def get_user_by_email(user: User) -> UserResponse | None:
+            def get_user_by_email(email: str) -> UserResponse | None:
                 with get_connection(row_factory=class_row(UserResponse)) as conn:
                     result = conn.execute(
                         """
@@ -65,6 +65,27 @@ class UserRepository:
                             WHERE email = %s
                             ;
                         """,
-                        (user.email),
+                        (email),
+                    ).fetchone()
+                return result
+
+            @staticmethod
+            def get_user_by_username(username: str) -> UserResponse | None:
+                with get_connection(row_factory=class_row(UserResponse)) as conn:
+                    result = conn.execute(
+                        """
+                            SELECT 
+                                id
+                                ,username
+                                ,email
+                                ,is_admin
+                                ,is_active
+                                ,created_at
+                                ,updated_at
+                            FROM users
+                            WHERE email = %s
+                            ;
+                        """,
+                        (username),
                     ).fetchone()
                 return result
