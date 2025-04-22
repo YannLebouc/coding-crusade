@@ -83,7 +83,7 @@ class UserRepository:
                                 ,created_at
                                 ,updated_at
                             FROM users
-                            WHERE email = %s
+                            WHERE username = %s
                             ;
                         """,
                         (username),
