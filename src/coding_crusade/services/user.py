@@ -2,7 +2,6 @@ from coding_crusade.repositories.user import UserRepository as ur
 from coding_crusade.models.user import User
 from coding_crusade.dtos.user import UserCreation
 from werkzeug import generate_password_hash
-from coding_crusade.exceptions import UsernameAlreadyUsedError, EmailAlreadyUsedError
 
 
 class UserService:
@@ -16,13 +15,22 @@ class UserService:
         )
 
         if ur.get_user_by_email(new_user.email):
-            raise EmailAlreadyUsedError(
-                f"L'adresse email {new_user.email} est déjà utilisée, la création de l'inscription a échouée"
-            )
+            raise EmailAlreadyUsedError(new_user.email)
 
         if ur.get_user_by_username(new_user.username):
-            raise UsernameAlreadyUsedError(
-                f"Le nom d'utilisateur {new_user.username} est déjà utilisé, la création de l'inscription a échouée"
-            )
+            raise UsernameAlreadyUsedError(new_user.username)
 
         return ur.create_user(new_user)
+
+
+class UserException(Exception): ...
+
+
+class EmailAlreadyUsedError(UserException):
+    def __init__(self, email: str):
+        super().__init__(f'Email adress "{email}" is already in use')
+
+
+class UsernameAlreadyUsedError(UserException):
+    def __init__(self, username: str):
+        super().__init__(f'Username "{username}" is already in use')
