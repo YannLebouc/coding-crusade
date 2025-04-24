@@ -8,29 +8,30 @@ class UserService:
 
     @staticmethod
     def register_user(user: UserCreation) -> User:
+
+        if ur.get_user_by_email(user.email):
+            raise EmailAlreadyUsedError(user.email)
+
+        if ur.get_user_by_username(user.username):
+            raise UsernameAlreadyUsedError(user.username)
+
         new_user = User(
             username=user.username,
             password=generate_password_hash(user.password),
             email=user.email,
         )
 
-        if ur.get_user_by_email(new_user.email):
-            raise EmailAlreadyUsedError(new_user.email)
-
-        if ur.get_user_by_username(new_user.username):
-            raise UsernameAlreadyUsedError(new_user.username)
-
         return ur.create_user(new_user)
 
 
-class UserException(Exception): ...
+class UserError(Exception): ...
 
 
-class EmailAlreadyUsedError(UserException):
+class EmailAlreadyUsedError(UserError):
     def __init__(self, email: str):
         super().__init__(f'Email adress "{email}" is already in use')
 
 
-class UsernameAlreadyUsedError(UserException):
+class UsernameAlreadyUsedError(UserError):
     def __init__(self, username: str):
         super().__init__(f'Username "{username}" is already in use')
