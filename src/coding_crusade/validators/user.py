@@ -2,6 +2,20 @@ import re
 from email_validator import validate_email, EmailNotValidError
 from coding_crusade.validators.base import ValidatorError
 
+PASSWORD_RULES = (
+    "\n- Be at least 8 characters long"
+    "\n- Contain :"
+    "\n     - One capital letter"
+    "\n     - One small letter"
+    "\n     - One special character"
+    "\n     - One number"
+)
+
+USERNAME_RULES = (
+    "\n- Be between 3 and 20 alphanumeric characters long"
+    "\n- Not contain any other special character than the underscore (_)"
+)
+
 
 class UserValidator:
     def validate_email(email: str) -> str:
@@ -13,15 +27,17 @@ class UserValidator:
         return email.normalized
 
     def validate_username(username: str) -> str:
-        # statement to be determined according to validation rules
-        if not statement:
+        # Pattern based on USERNAME_RULES const
+        pattern = r"^[a-zA-Z0-9_]{3,20}$"
+        if not re.match(pattern, username):
             raise InvalidUsernameError(username)
 
-        return username
+        return username.lower().strip()
 
     def validate_password(password: str) -> str:
-        # Regex to be written according to validation rules
-        if not re.match("", password):
+        # Pattern based on PASSWORD_RULES const
+        pattern = r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+        if not re.match(pattern, password):
             raise InvalidPasswordError(password)
 
         return password
@@ -37,22 +53,9 @@ class InvalidEmailError(ValidatorError):
 
 class InvalidUsernameError(ValidatorError):
     def __init__(self, username: str):
-        super().__init__(
-            f"""Invalid username \"{username}\". It must : 
-                - Be between 3 and 20 alphanumeric characters long
-                - Not contain any other special character than the underscore (_)
-             """
-        )
+        super().__init__(f'Invalid username "{username}". It must :' + USERNAME_RULES)
 
 
 class InvalidPasswordError(ValidatorError):
     def __init__(self, password: str):
-        super().__init__(
-            f"""Invalid password \"{password}\". It must :
-                - Be at least 8 characters long
-                - Contain :
-                    - one capital letter
-                    - one small letter
-                    - one special character
-            """
-        )
+        super().__init__(f'Invalid password "{password}". It must :' + PASSWORD_RULES)
