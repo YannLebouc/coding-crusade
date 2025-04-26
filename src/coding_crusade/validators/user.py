@@ -2,19 +2,19 @@ import re
 from email_validator import validate_email, EmailNotValidError
 from coding_crusade.validators.base import ValidatorError
 
-PASSWORD_RULES = (
-    "\n- Be at least 8 characters long"
-    "\n- Contain :"
-    "\n     - One capital letter"
-    "\n     - One small letter"
-    "\n     - One special character"
-    "\n     - One number"
-)
+PASSWORD_RULES = """
+- Be at least 8 characters long
+- Contain :
+     - One capital letter
+     - One small letter
+     - One special character
+     - One number
+"""
 
-USERNAME_RULES = (
-    "\n- Be between 3 and 20 alphanumeric characters long"
-    "\n- Not contain any other special character than the underscore (_)"
-)
+USERNAME_RULES = """
+- Be between 3 and 20 alphanumeric characters long
+- Not contain any other special character than the underscore (_)
+"""
 
 
 class UserValidator:
@@ -53,9 +53,9 @@ class InvalidEmailError(ValidatorError):
 
 class InvalidUsernameError(ValidatorError):
     def __init__(self, username: str):
-        super().__init__(f'Invalid username "{username}". It must :' + USERNAME_RULES)
+        super().__init__(f'Invalid username "{username}". It must :\n{USERNAME_RULES}')
 
 
 class InvalidPasswordError(ValidatorError):
     def __init__(self, password: str):
-        super().__init__(f'Invalid password "{password}". It must :' + PASSWORD_RULES)
+        super().__init__(f'Invalid password "{password}". It must :\n{PASSWORD_RULES}')
